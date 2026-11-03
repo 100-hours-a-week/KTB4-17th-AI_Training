@@ -1,0 +1,90 @@
+{
+  "generatedAt": "2026-10-22T05:44:20+00:00",
+  "input": "/Users/hyerin.cho/KTB-pj/V2/KTB4-17th-AI/data/synthetic/sub-1000/sessions.jsonl",
+  "out": "/Users/hyerin.cho/KTB-pj/V2/KTB4-17th-AI/data/synthetic/sub-1000-rewritten/sessions.jsonl",
+  "run": {
+    "version": "rewrite-synthetic-questions/5",
+    "model": "google/gemini-2.5-flash-lite",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "productionCodeHash": "49df06e8df51cb0e1549656396216c8d4a4fc70a33226bfd22c8dd1fe9a15a2b",
+    "guardrailMode": "shadow",
+    "rewritePrompt": "당신은 소개팅 앱 온보딩 AI '하루'의 발화를 작성하는 편집자입니다.\n입력 JSON의 previousConversation은 이미 나눈 대화이고, questionToRewrite가 이번에 할 질문입니다.\n대화를 자유롭게 이어가는 작업이 아니라 questionToRewrite의 의미를 유지하며 말투를 다듬는 작업입니다.\n기존 질문에 대해 받은 답변을 그대로 붙일 예정이므로 질문의 대상 상황이나 묻는 내용을 바꾸면 안 됩니다.\n\n출력은 JSON 객체 하나: {\"reaction\": \"직전 사용자 답변에 대한 짧은 반응\", \"question\": \"다듬은 질문\"}\n- 존댓말의 편한 메신저 말투. 반응은 한 문장, 질문은 정확히 하나로 물음표로 끝냅니다.\n- 이모지와 이모티콘은 쓰지 않습니다.\n- reaction은 previousConversation의 마지막 user 메시지에 실제로 있는 내용 하나에만 반응합니다.\n  진단·평가·조언·질문·자기 경험은 넣지 않습니다. 첫 턴에는 reaction을 빈 문자열로 둡니다.\n- question은 questionToRewrite와 같은 내용을 묻습니다. 이전 대화의 소재로 후속 질문을 만들지 않습니다.\n- 선택지가 있으면 어느 한쪽을 유도하지 말고 모든 선택지를 자연스럽게 제시합니다.\n- 마지막 턴에는 질문 앞에 '마지막으로'처럼 가볍게 마무리하는 말을 붙일 수 있습니다.\n- 설명, 마크다운, 사용자 답변 생성은 하지 않습니다.\n",
+    "responseFormat": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "rewritten_question",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "reaction": {
+              "type": "string"
+            },
+            "question": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "reaction",
+            "question"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "topicAnchors": {
+      "weekend": [
+        "주말"
+      ],
+      "ideal_type": [
+        "사람|상대|연인|이성|매력|이상형",
+        "보[는게]|보게|중요|먼저|기준|매력|이상형|끌리"
+      ],
+      "hard_times": [
+        "힘[든들]|고민|어려|속상",
+        "말|얘기|이야기|나누|털어|표현"
+      ],
+      "interests": [
+        "취미|관심|빠[져진]|몰두|즐[겨기]|시간.*쓰|시간.*보내"
+      ],
+      "contact": [
+        "연락|톡|메시지|문자",
+        "자주|빈도|수시|종일|필요|할 말|주기|얼마나|많이|때때"
+      ],
+      "disagreement": [
+        "의견|갈등|싸[우울웠움]|다[툼투퉜]|부딪|충돌"
+      ],
+      "share_vs_separate": [
+        "공유|각자|따로|혼자|개인|함께|같이"
+      ],
+      "slow_reply": [
+        "답장|답[이을]|연락|반응",
+        "늦|없|느[릴리]|뜸|미지근|지연"
+      ],
+      "receiving_hurt": [
+        "서운|섭섭",
+        "상대|연인|애인|그분|남친|여친"
+      ],
+      "orientation": [
+        "연애|관계|만남|만나|알아가"
+      ]
+    }
+  },
+  "requested": 997,
+  "written": 997,
+  "turns": 9970,
+  "newlyGeneratedTurns": 6625,
+  "failed": {},
+  "abortedAfterFailures": false,
+  "pending": [],
+  "elapsedSeconds": 570.4,
+  "questionSources": {
+    "llm": 9970
+  },
+  "finalAudit": {
+    "path": "/Users/hyerin.cho/KTB-pj/V2/KTB4-17th-AI/data/synthetic/sub-1000-rewritten/sessions.audit.json",
+    "status": "passed",
+    "outputSha256": "99e60e5b01e1b503f7dfc03f5996128ab7031282a1fef4d9350e9c8ce6e4c5f1",
+    "broadIdealTypeNormalizations": 29
+  }
+}

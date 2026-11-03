@@ -1,0 +1,16 @@
+{
+  "base_model": "/root/models/kanana-2-3b-instruct",
+  "data_dir": "/root/tagging-data",
+  "output_dir": "/root/adapters/tagging-v0",
+  "epochs": 3,
+  "learning_rate": 0.0002,
+  "batch_size": 8,
+  "grad_accum": 2,
+  "max_length": 2048,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "load_in_4bit": false,
+  "max_steps": -1,
+  "seed": 42
+}

@@ -1,0 +1,2180 @@
+{
+  "results": [
+    {
+      "run": "gold-claude-qwen-fp8",
+      "model": "qwen3.8-27b-fp8",
+      "reasoning": false,
+      "costUsd": null,
+      "elapsedSeconds": 22.6,
+      "tagging": {
+        "items": 63,
+        "primaryPrecision": 0.74,
+        "primaryRecall": 1.0,
+        "primaryF1": 0.8506,
+        "exactMatch": 0.7619,
+        "offTopicFalsePositiveRate": 0.0175,
+        "offTopicFalsePositives": "1/57",
+        "offTopicRecall": 0.8333,
+        "offTopicHits": "5/6",
+        "abstentionRate": 0.5455,
+        "abstentions": "12/22",
+        "meanAgreement": 0.9198,
+        "consistentWrong": 9,
+        "consistentWrongIds": [
+          "gold:persona_onboarding_tagging-021",
+          "gold:persona_onboarding_tagging-032",
+          "gold:persona_onboarding_tagging-018",
+          "gold:persona_onboarding_tagging-048",
+          "gold:persona_onboarding_tagging-052",
+          "gold:persona_onboarding_tagging-064",
+          "gold:persona_onboarding_tagging-066",
+          "gold:persona_onboarding_tagging-068",
+          "gold:persona_onboarding_tagging-072"
+        ],
+        "formatViolations": {
+          "samples": 315,
+          "parseOrCallFail": 1,
+          "invalidDims": 1,
+          "extraKeys": 0
+        },
+        "byCategory": {
+          "abusive_off_topic": "1/2",
+          "direct": "14/15",
+          "indirect_evidence": "4/15",
+          "insufficient_evidence": "5/5",
+          "joke_nonanswer": "2/2",
+          "low_or_unknown": "13/15",
+          "multi_axis_contact": "1/1",
+          "multi_axis_independence": "1/1",
+          "off_topic": "4/4",
+          "short_affirmative": "1/1",
+          "short_uncertain": "2/2"
+        },
+        "heldForReview": {
+          "items": 0,
+          "exact": 0
+        },
+        "perItem": {
+          "gold:persona_onboarding_tagging-003": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-001": {
+            "correct": true,
+            "pred": [
+              "avoidance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-002": {
+            "correct": true,
+            "pred": [
+              "avoidance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-006": {
+            "correct": true,
+            "pred": [
+              "anxiety"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-004": {
+            "correct": false,
+            "pred": [
+              "avoidance",
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-005": {
+            "correct": true,
+            "pred": [
+              "anxiety"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-007": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-011": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-010": {
+            "correct": true,
+            "pred": [
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-009": {
+            "correct": true,
+            "pred": [
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-040": {
+            "correct": false,
+            "pred": [
+              "engagement"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-012": {
+            "correct": true,
+            "pred": [
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-026": {
+            "correct": true,
+            "pred": [
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-031": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-019": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-021": {
+            "correct": false,
+            "pred": [
+              "assurances",
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-008": {
+            "correct": true,
+            "pred": [
+              "anxiety"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-024": {
+            "correct": false,
+            "pred": [
+              "assurances"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-023": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-027": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-030": {
+            "correct": true,
+            "pred": [
+              "problem_solving"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-020": {
+            "correct": false,
+            "pred": [
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-032": {
+            "correct": false,
+            "pred": [
+              "problem_solving"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-039": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-022": {
+            "correct": true,
+            "pred": [
+              "assurances"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-037": {
+            "correct": true,
+            "pred": [
+              "engagement"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-029": {
+            "correct": true,
+            "pred": [
+              "problem_solving"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-017": {
+            "correct": true,
+            "pred": [
+              "positivity"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-028": {
+            "correct": true,
+            "pred": [
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-025": {
+            "correct": true,
+            "pred": [
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-038": {
+            "correct": true,
+            "pred": [
+              "engagement"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-041": {
+            "correct": true,
+            "pred": [
+              "compliance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-018": {
+            "correct": false,
+            "pred": [
+              "disclosure",
+              "positivity"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-043": {
+            "correct": false,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-042": {
+            "correct": true,
+            "pred": [
+              "compliance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-045": {
+            "correct": true,
+            "pred": [
+              "ideal_warmth"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-047": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-048": {
+            "correct": false,
+            "pred": [
+              "ideal_warmth"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-046": {
+            "correct": true,
+            "pred": [
+              "ideal_warmth"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-044": {
+            "correct": false,
+            "pred": [
+              "compliance",
+              "problem_solving"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-049": {
+            "correct": true,
+            "pred": [
+              "ideal_vitality"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-051": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-052": {
+            "correct": false,
+            "pred": [
+              "ideal_vitality"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-050": {
+            "correct": true,
+            "pred": [
+              "ideal_vitality"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-058": {
+            "correct": true,
+            "pred": [
+              "seriousness"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-059": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-057": {
+            "correct": true,
+            "pred": [
+              "seriousness"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-062": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-061": {
+            "correct": true,
+            "pred": [
+              "interests"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-063": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-060": {
+            "correct": true,
+            "pred": [
+              "seriousness"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-064": {
+            "correct": false,
+            "pred": [
+              "interests"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-067": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-070": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-066": {
+            "correct": false,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-068": {
+            "correct": false,
+            "pred": [
+              "routine"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-065": {
+            "correct": true,
+            "pred": [
+              "routine"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-071": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-069": {
+            "correct": true,
+            "pred": [
+              "date_prefer"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-079": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-077": {
+            "correct": true,
+            "pred": [
+              "avoidance",
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-078": {
+            "correct": true,
+            "pred": [
+              "anxiety",
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-072": {
+            "correct": false,
+            "pred": [
+              "date_prefer"
+            ],
+            "predOffTopic": false
+          }
+        }
+      },
+      "extraction": {
+        "items": 24,
+        "callOrParseFail": 0,
+        "schemaErrors": 0,
+        "dimensionDecisionAccuracy": 1.0,
+        "hallucinationRate": 0.0,
+        "missRate": 0.0,
+        "inRangeRate": 1.0,
+        "inRange": "24/24",
+        "decisions": {
+          "tn": 336,
+          "tp": 24
+        },
+        "textualDecisionAccuracy": 0.4896,
+        "narrativeMissing": 0,
+        "narrativeAutoScore": 0.7188,
+        "narrativeChecks": {
+          "noSpeculation": 0.9583,
+          "noContradiction": 1.0,
+          "lengthContract": 0.75,
+          "quoteGrounded": 0.1667
+        },
+        "perItem": {
+          "gold:persona_build-024": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "ideal_warmth": 25
+            },
+            "goldRanges": {
+              "ideal_warmth": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": false,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-020": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "engagement": 12
+            },
+            "goldRanges": {
+              "engagement": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": false,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-002": {
+            "decisions": {
+              "tp": 1,
+              "tn": 14
+            },
+            "scores": {
+              "avoidance": 12
+            },
+            "goldRanges": {
+              "avoidance": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": false,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-016": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "problem_solving": 12
+            },
+            "goldRanges": {
+              "problem_solving": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": false,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-010": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "positivity": 25
+            },
+            "goldRanges": {
+              "positivity": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": false,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-005": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "disclosure": 85
+            },
+            "goldRanges": {
+              "disclosure": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": false,
+              "noContradiction": true,
+              "lengthContract": false,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-009": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "positivity": 85
+            },
+            "goldRanges": {
+              "positivity": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-023": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "ideal_warmth": 90
+            },
+            "goldRanges": {
+              "ideal_warmth": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-030": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "seriousness": 25
+            },
+            "goldRanges": {
+              "seriousness": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-001": {
+            "decisions": {
+              "tp": 1,
+              "tn": 14
+            },
+            "scores": {
+              "avoidance": 75
+            },
+            "goldRanges": {
+              "avoidance": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-006": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "disclosure": 15
+            },
+            "goldRanges": {
+              "disclosure": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-025": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "ideal_vitality": 85
+            },
+            "goldRanges": {
+              "ideal_vitality": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-022": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "compliance": 15
+            },
+            "goldRanges": {
+              "compliance": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-019": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "engagement": 85
+            },
+            "goldRanges": {
+              "engagement": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-029": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "seriousness": 95
+            },
+            "goldRanges": {
+              "seriousness": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-003": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "anxiety": 85
+            },
+            "goldRanges": {
+              "anxiety": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-014": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "contact_rhythm": 15
+            },
+            "goldRanges": {
+              "contact_rhythm": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-013": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "contact_rhythm": 92
+            },
+            "goldRanges": {
+              "contact_rhythm": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-011": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "assurances": 85
+            },
+            "goldRanges": {
+              "assurances": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-021": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "compliance": 85
+            },
+            "goldRanges": {
+              "compliance": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-012": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "assurances": 15
+            },
+            "goldRanges": {
+              "assurances": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-004": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "anxiety": 15
+            },
+            "goldRanges": {
+              "anxiety": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-026": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "ideal_vitality": 15
+            },
+            "goldRanges": {
+              "ideal_vitality": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-015": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "problem_solving": 85
+            },
+            "goldRanges": {
+              "problem_solving": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "run": "gold-gemini-2.5-flash-lite",
+      "model": "google/gemini-2.5-flash-lite",
+      "reasoning": false,
+      "costUsd": 0.0435,
+      "elapsedSeconds": 34.6,
+      "tagging": {
+        "items": 63,
+        "primaryPrecision": 0.8,
+        "primaryRecall": 0.973,
+        "primaryF1": 0.8781,
+        "exactMatch": 0.8254,
+        "offTopicFalsePositiveRate": 0.0,
+        "offTopicFalsePositives": "0/57",
+        "offTopicRecall": 0.8333,
+        "offTopicHits": "5/6",
+        "abstentionRate": 0.6818,
+        "abstentions": "15/22",
+        "meanAgreement": 0.9302,
+        "consistentWrong": 4,
+        "consistentWrongIds": [
+          "gold:persona_onboarding_tagging-032",
+          "gold:persona_onboarding_tagging-048",
+          "gold:persona_onboarding_tagging-064",
+          "gold:persona_onboarding_tagging-068"
+        ],
+        "formatViolations": {
+          "samples": 315,
+          "parseOrCallFail": 0,
+          "invalidDims": 0,
+          "extraKeys": 0
+        },
+        "byCategory": {
+          "abusive_off_topic": "1/2",
+          "direct": "15/15",
+          "indirect_evidence": "9/15",
+          "insufficient_evidence": "3/5",
+          "joke_nonanswer": "2/2",
+          "low_or_unknown": "14/15",
+          "multi_axis_contact": "0/1",
+          "multi_axis_independence": "1/1",
+          "off_topic": "4/4",
+          "short_affirmative": "1/1",
+          "short_uncertain": "2/2"
+        },
+        "heldForReview": {
+          "items": 0,
+          "exact": 0
+        },
+        "perItem": {
+          "gold:persona_onboarding_tagging-001": {
+            "correct": true,
+            "pred": [
+              "avoidance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-004": {
+            "correct": true,
+            "pred": [
+              "avoidance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-006": {
+            "correct": true,
+            "pred": [
+              "anxiety"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-008": {
+            "correct": true,
+            "pred": [
+              "anxiety"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-011": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-009": {
+            "correct": true,
+            "pred": [
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-012": {
+            "correct": false,
+            "pred": [
+              "disclosure",
+              "positivity"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-018": {
+            "correct": false,
+            "pred": [
+              "disclosure",
+              "positivity"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-010": {
+            "correct": true,
+            "pred": [
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-017": {
+            "correct": true,
+            "pred": [
+              "positivity"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-019": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-020": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-022": {
+            "correct": true,
+            "pred": [
+              "assurances"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-023": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-021": {
+            "correct": true,
+            "pred": [
+              "assurances"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-024": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-025": {
+            "correct": true,
+            "pred": [
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-027": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-026": {
+            "correct": true,
+            "pred": [
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-029": {
+            "correct": true,
+            "pred": [
+              "problem_solving"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-028": {
+            "correct": true,
+            "pred": [
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-003": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-007": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-002": {
+            "correct": true,
+            "pred": [
+              "avoidance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-005": {
+            "correct": true,
+            "pred": [
+              "anxiety"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-031": {
+            "correct": false,
+            "pred": [
+              "withdrawal"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-030": {
+            "correct": true,
+            "pred": [
+              "problem_solving"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-032": {
+            "correct": false,
+            "pred": [
+              "problem_solving"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-037": {
+            "correct": true,
+            "pred": [
+              "engagement"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-038": {
+            "correct": true,
+            "pred": [
+              "engagement"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-039": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-040": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-042": {
+            "correct": true,
+            "pred": [
+              "compliance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-041": {
+            "correct": true,
+            "pred": [
+              "compliance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-043": {
+            "correct": false,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-044": {
+            "correct": true,
+            "pred": [
+              "compliance"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-046": {
+            "correct": true,
+            "pred": [
+              "ideal_warmth"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-045": {
+            "correct": true,
+            "pred": [
+              "ideal_warmth"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-047": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-048": {
+            "correct": false,
+            "pred": [
+              "ideal_warmth"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-050": {
+            "correct": true,
+            "pred": [
+              "ideal_vitality"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-051": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-049": {
+            "correct": true,
+            "pred": [
+              "ideal_vitality"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-057": {
+            "correct": true,
+            "pred": [
+              "seriousness"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-052": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-058": {
+            "correct": true,
+            "pred": [
+              "seriousness"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-059": {
+            "correct": false,
+            "pred": [
+              "seriousness"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-062": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-064": {
+            "correct": false,
+            "pred": [
+              "interests"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-061": {
+            "correct": true,
+            "pred": [
+              "interests"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-060": {
+            "correct": true,
+            "pred": [
+              "seriousness"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-065": {
+            "correct": true,
+            "pred": [
+              "routine"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-063": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-066": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-067": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-068": {
+            "correct": false,
+            "pred": [
+              "routine"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-070": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-069": {
+            "correct": true,
+            "pred": [
+              "date_prefer"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-077": {
+            "correct": true,
+            "pred": [
+              "avoidance",
+              "disclosure"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-071": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-072": {
+            "correct": false,
+            "pred": [
+              "interests"
+            ],
+            "predOffTopic": false
+          },
+          "gold:persona_onboarding_tagging-079": {
+            "correct": true,
+            "pred": [],
+            "predOffTopic": true
+          },
+          "gold:persona_onboarding_tagging-078": {
+            "correct": false,
+            "pred": [
+              "contact_rhythm"
+            ],
+            "predOffTopic": false
+          }
+        }
+      },
+      "extraction": {
+        "items": 24,
+        "callOrParseFail": 0,
+        "schemaErrors": 0,
+        "dimensionDecisionAccuracy": 0.9917,
+        "hallucinationRate": 0.006,
+        "missRate": 0.0417,
+        "inRangeRate": 1.0,
+        "inRange": "23/24",
+        "decisions": {
+          "tn": 334,
+          "tp": 23,
+          "fn": 1,
+          "fp": 2
+        },
+        "textualDecisionAccuracy": 0.9479,
+        "narrativeMissing": 0,
+        "narrativeAutoScore": 0.7917,
+        "narrativeChecks": {
+          "noSpeculation": 1.0,
+          "noContradiction": 1.0,
+          "lengthContract": 0.9583,
+          "quoteGrounded": 0.2083
+        },
+        "perItem": {
+          "gold:persona_build-009": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "positivity": 80
+            },
+            "goldRanges": {
+              "positivity": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-010": {
+            "decisions": {
+              "tn": 14,
+              "fn": 1
+            },
+            "scores": {
+              "positivity": null
+            },
+            "goldRanges": {
+              "positivity": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-001": {
+            "decisions": {
+              "tp": 1,
+              "tn": 14
+            },
+            "scores": {
+              "avoidance": 85
+            },
+            "goldRanges": {
+              "avoidance": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-005": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "disclosure": 90
+            },
+            "goldRanges": {
+              "disclosure": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-003": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "anxiety": 95
+            },
+            "goldRanges": {
+              "anxiety": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-002": {
+            "decisions": {
+              "tp": 1,
+              "tn": 14
+            },
+            "scores": {
+              "avoidance": 15
+            },
+            "goldRanges": {
+              "avoidance": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-006": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "disclosure": 0
+            },
+            "goldRanges": {
+              "disclosure": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-004": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "anxiety": 15
+            },
+            "goldRanges": {
+              "anxiety": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-012": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "assurances": 0
+            },
+            "goldRanges": {
+              "assurances": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-011": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "assurances": 80
+            },
+            "goldRanges": {
+              "assurances": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-014": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "contact_rhythm": 10
+            },
+            "goldRanges": {
+              "contact_rhythm": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-019": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "engagement": 85
+            },
+            "goldRanges": {
+              "engagement": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-016": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "problem_solving": 0
+            },
+            "goldRanges": {
+              "problem_solving": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-013": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "contact_rhythm": 90
+            },
+            "goldRanges": {
+              "contact_rhythm": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-020": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "engagement": 18
+            },
+            "goldRanges": {
+              "engagement": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-015": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "problem_solving": 80
+            },
+            "goldRanges": {
+              "problem_solving": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-021": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "compliance": 100
+            },
+            "goldRanges": {
+              "compliance": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-022": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "compliance": 20
+            },
+            "goldRanges": {
+              "compliance": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-026": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "ideal_vitality": 15
+            },
+            "goldRanges": {
+              "ideal_vitality": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-024": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "ideal_warmth": 0
+            },
+            "goldRanges": {
+              "ideal_warmth": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": false,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-023": {
+            "decisions": {
+              "tn": 12,
+              "tp": 1,
+              "fp": 2
+            },
+            "scores": {
+              "ideal_warmth": 90
+            },
+            "goldRanges": {
+              "ideal_warmth": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": false
+            }
+          },
+          "gold:persona_build-025": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "ideal_vitality": 90
+            },
+            "goldRanges": {
+              "ideal_vitality": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-029": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "seriousness": 100
+            },
+            "goldRanges": {
+              "seriousness": [
+                65,
+                100
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": true
+            }
+          },
+          "gold:persona_build-030": {
+            "decisions": {
+              "tn": 14,
+              "tp": 1
+            },
+            "scores": {
+              "seriousness": 0
+            },
+            "goldRanges": {
+              "seriousness": [
+                0,
+                34
+              ]
+            },
+            "narrative": {
+              "valid": true,
+              "noSpeculation": true,
+              "noContradiction": true,
+              "lengthContract": true,
+              "quoteGrounded": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "disagreements": [
+    {
+      "id": "gold:persona_onboarding_tagging-004",
+      "category": "indirect_evidence",
+      "question": "연인과 시간을 어떻게 나누고 싶어요?",
+      "answer": "휴일에도 제 작업실에서 혼자 보내는 시간을 꼭 남겨 두고 싶어요. 사진만 한 장 보내면 그날 이야기를 길게 풀지 않아도 통하는 느낌이에요.",
+      "gold": [
+        "avoidance"
+      ],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ ['avoidance', 'contact_rhythm']",
+        "gold-gemini-2.5-flash-lite": "✓ ['avoidance']"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-012",
+      "category": "indirect_evidence",
+      "question": "마음에 담긴 이야기를 나누는 편이에요?",
+      "answer": "기쁘거나 속상한 일이 생기면 어떤 기분인지 바로 말로 전해요. 말을 꺼내고 나면 상대에게 고맙다는 한마디가 저절로 나와요.",
+      "gold": [
+        "disclosure"
+      ],
+      "runs": {
+        "gold-claude-qwen-fp8": "✓ ['disclosure']",
+        "gold-gemini-2.5-flash-lite": "✗ ['disclosure', 'positivity']"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-020",
+      "category": "indirect_evidence",
+      "question": "평소 연인에게 어떤 말투로 이야기해요?",
+      "answer": "상대가 제 메시지를 캡처해서 힘들 때 다시 읽는대요. 어떤 표현 때문인지는 저도 모르겠어요.",
+      "gold": [],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ ['disclosure']",
+        "gold-gemini-2.5-flash-lite": "✓ []"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-021",
+      "category": "direct",
+      "question": "마음이나 함께할 미래를 말로 표현해요?",
+      "answer": "다음 계절에도 함께하고 싶다고 제 마음을 먼저 자주 말해요.",
+      "gold": [
+        "assurances"
+      ],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ ['assurances', 'disclosure']",
+        "gold-gemini-2.5-flash-lite": "✓ ['assurances']"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-024",
+      "category": "indirect_evidence",
+      "question": "마음이나 함께할 미래를 말로 표현해요?",
+      "answer": "내년 달력을 펼쳐 놓으니 상대가 우리 기념일에 먼저 동그라미를 치더라고요. 제가 전에 흘린 말을 기억했다면서요.",
+      "gold": [],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ ['assurances']",
+        "gold-gemini-2.5-flash-lite": "✓ []"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-031",
+      "category": "insufficient_evidence",
+      "question": "의견이 갈리면 어떻게 정리해요?",
+      "answer": "서로 생각이 달랐던 일이 바로 떠오르지 않아요. 이후에 무엇을 했는지 설명하려니 기억이 안 나네요.",
+      "gold": [],
+      "runs": {
+        "gold-claude-qwen-fp8": "✓ []",
+        "gold-gemini-2.5-flash-lite": "✗ ['withdrawal']"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-040",
+      "category": "indirect_evidence",
+      "question": "화가 났을 때 말투가 달라져요?",
+      "answer": "말다툼 녹음을 들었는데 중간부터 상대 말이 잘 안 들렸어요. 옆방 사람도 제 소리만 들렸다고 하더라고요.",
+      "gold": [],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ ['engagement']",
+        "gold-gemini-2.5-flash-lite": "✓ []"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-044",
+      "category": "indirect_evidence",
+      "question": "상대가 서운하다고 하면 어떻게 해요?",
+      "answer": "제 생각이 달라도 다툼을 끝내려고 상대 말이 전부 맞다고 해요. 상대 말을 들은 뒤 제가 동의한 부분과 아닌 부분을 나눠 적어 봐요.",
+      "gold": [
+        "compliance"
+      ],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ ['compliance', 'problem_solving']",
+        "gold-gemini-2.5-flash-lite": "✓ ['compliance']"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-052",
+      "category": "indirect_evidence",
+      "question": "상대의 밝은 분위기나 매력은 얼마나 보세요?",
+      "answer": "모임 사진에서 자꾸 같은 사람에게 눈이 갔어요. 사진마다 표정이 생생하고 몸짓도 크더라고요. 실제로는 아직 말을 못 나눴어요.",
+      "gold": [],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ ['ideal_vitality']",
+        "gold-gemini-2.5-flash-lite": "✓ []"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-059",
+      "category": "insufficient_evidence",
+      "question": "지금 어떤 관계를 원하고 있어요?",
+      "answer": "만남을 시작하지 않아서 먼 계획까지는 아직 생각을 못 해 봤어요.",
+      "gold": [],
+      "runs": {
+        "gold-claude-qwen-fp8": "✓ []",
+        "gold-gemini-2.5-flash-lite": "✗ ['seriousness']"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-066",
+      "category": "low_or_unknown",
+      "question": "보통 하루를 어떻게 보내세요?",
+      "answer": "저녁 식물 돌보기에 대해서는 아직 제 선호를 정하지 않았어요.",
+      "gold": [],
+      "runs": {
+        "gold-claude-qwen-fp8": "✗ []",
+        "gold-gemini-2.5-flash-lite": "✓ []"
+      }
+    },
+    {
+      "id": "gold:persona_onboarding_tagging-078",
+      "category": "multi_axis_contact",
+      "question": "답장과 연락 빈도는 어때요?",
+      "answer": "하루에 한두 번만 연락해도 좋고 답이 늦는 건 별로 신경 쓰지 않아요.",
+      "gold": [
+        "anxiety",
+        "contact_rhythm"
+      ],
+      "runs": {
+        "gold-claude-qwen-fp8": "✓ ['anxiety', 'contact_rhythm']",
+        "gold-gemini-2.5-flash-lite": "✗ ['contact_rhythm']"
+      }
+    }
+  ]
+}

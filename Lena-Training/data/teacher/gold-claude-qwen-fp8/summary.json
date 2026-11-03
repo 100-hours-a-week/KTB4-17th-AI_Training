@@ -1,0 +1,44 @@
+{
+  "labeledNow": {
+    "tagging": 63,
+    "extraction": 24
+  },
+  "skippedResume": {
+    "tagging": 0,
+    "extraction": 0
+  },
+  "usage": {
+    "calls": 339,
+    "failed_calls": 0,
+    "prompt_tokens": 364202,
+    "completion_tokens": 11154
+  },
+  "teacher": {
+    "model": "qwen3.8-27b-fp8",
+    "reasoning": false,
+    "samples": 5,
+    "labelerVersion": "teacher-label/1",
+    "tagPromptVersion": "67757f18f2f3",
+    "extractPromptVersion": "835686940519"
+  },
+  "generatedAt": "2026-11-02T07:26:57+00:00",
+  "elapsedSeconds": 22.6,
+  "quality": {
+    "tagging": {
+      "items": 63,
+      "samples": 315,
+      "parseOrCallFailRate": 0.0032,
+      "invalidDimensionSamples": 1,
+      "extraKeySamples": 0,
+      "meanAgreement": 0.92,
+      "offTopicRecallOnIntended": null,
+      "emptyPrimaryRate": 0.206
+    },
+    "extraction": {
+      "items": 24,
+      "failRate": 0.0,
+      "schemaErrors": 0,
+      "itemsWithUnansweredKeys": 0
+    }
+  }
+}

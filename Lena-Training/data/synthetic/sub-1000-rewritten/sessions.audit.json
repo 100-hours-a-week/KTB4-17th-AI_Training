@@ -1,0 +1,33 @@
+{
+  "auditedAt": "2026-10-22T05:44:27+00:00",
+  "status": "passed",
+  "input": "/Users/hyerin.cho/KTB-pj/V2/KTB4-17th-AI/data/synthetic/sub-1000/sessions.jsonl",
+  "output": "/Users/hyerin.cho/KTB-pj/V2/KTB4-17th-AI/data/synthetic/sub-1000-rewritten/sessions.jsonl",
+  "inputSha256": "f2af501c5e06e828b25502e563e61dcfc78d789f3ff71681fbb49be9a2760aad",
+  "outputSha256": "99e60e5b01e1b503f7dfc03f5996128ab7031282a1fef4d9350e9c8ce6e4c5f1",
+  "sessions": 997,
+  "turns": 9970,
+  "missingSessions": [],
+  "duplicateSessions": 0,
+  "unchangedAnswers": 9970,
+  "unchangedOffTopicReasks": 309,
+  "unchangedProfilesAndFamilyIds": 997,
+  "alignedHistories": 997,
+  "nextStepTaggingInputs": 10279,
+  "nextStepExtractionInputs": 997,
+  "questionSources": {
+    "llm": 9970
+  },
+  "topicAnchorChecksPassed": 9970,
+  "broadIdealTypeNormalizations": 29,
+  "discardedReactionsWithExtraQuestion": 215,
+  "acceptedOutputTokens": {
+    "prompt": 8059136,
+    "completion": 491607,
+    "note": "Successful completions only; excludes discarded/retried completions and earlier pilots."
+  },
+  "model": "google/gemini-2.5-flash-lite",
+  "route": "https://openrouter.ai/api/v1",
+  "promptMode": "dedicated question rewriting with past-only conversation JSON",
+  "semanticReviewScope": "Topic anchors checked for all turns; manual review of samples, not all turns."
+}

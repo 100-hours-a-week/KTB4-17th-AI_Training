@@ -1,0 +1,38 @@
+{
+  "input": "data/synthetic/sub-1000/sessions.jsonl",
+  "inputSha256": "f2af501c5e06e828b25502e563e61dcfc78d789f3ff71681fbb49be9a2760aad",
+  "sessions": 997,
+  "turns": 9970,
+  "sources": {
+    "synthetic": 997
+  },
+  "simulatorModels": {
+    "google/gemini-3.8-flash": 997
+  },
+  "simulatorChannels": {
+    "subscription": 997
+  },
+  "questionSources": {
+    "seed": 9970
+  },
+  "modes": {
+    "normal": 8324,
+    "joke": 437,
+    "short": 900,
+    "off_topic": 309
+  },
+  "reaskTurns": 309,
+  "duplicateSessionIds": 0,
+  "missingSessionIds": [
+    "syn-0-00329",
+    "syn-0-00934"
+  ],
+  "invalidSessions": {
+    "syn-0-00943": [
+      "0944.txt: 턴 9: 없음",
+      "0944.txt: 턴 10: 없음"
+    ]
+  },
+  "originalHistoryAligned": true,
+  "status": "input_validated"
+}

@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "feedback_cards.schema.json",
+  "title": "Feedback Cards API (BE → AI)",
+  "description": "POST /ai/api/v1/feedback-cards/next, POST /ai/api/v1/feedback-cards/{card_id}/answer. 헤더 X-Internal-Api-Key 필수.",
+  "$defs": {
+    "RequestId": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+      "description": "재시도 키. 같은 값으로 다시 보내면 같은 결과를 돌려준다."
+    },
+    "UserId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "카드를 보는 유저 = 페르소나 주인. 앞뒤 공백은 제거된다."
+    },
+    "CardId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "AI가 발급한 카드 ID."
+    },
+    "FeedbackAnswer": {
+      "type": "string",
+      "enum": ["YES", "NO"],
+      "description": "예/아니오만 허용. 건너뛰기 값은 없다."
+    },
+
+    "FeedbackCardNextRequest": {
+      "title": "POST /feedback-cards/next 요청",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "user_id"],
+      "properties": {
+        "request_id": { "$ref": "#/$defs/RequestId" },
+        "user_id": { "$ref": "#/$defs/UserId" }
+      },
+      "examples": [
+        {
+          "request_id": "550e8400-e29b-41d4-a716-446655440010",
+          "user_id": "user-1001"
+        }
+      ]
+    },
+
+    "FeedbackCardResponse": {
+      "title": "POST /feedback-cards/next 응답 200",
+      "description": "보여줄 카드가 없으면 본문 없이 204.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["card_id", "utterance", "question", "question_version", "expires_at"],
+      "properties": {
+        "card_id": { "$ref": "#/$defs/CardId" },
+        "utterance": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "화면에 그대로 보여줄 페르소나 문장. 상대 정보는 제거되어 있다."
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "화면에 그대로 보여줄 질문 문구."
+        },
+        "question_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "description": "질문 문구 버전. 화면에 표시하지 않는다."
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "이 시각 이후에는 카드를 내리고 answer를 보내지 않는다."
+        }
+      },
+      "examples": [
+        {
+          "card_id": "fc_01JB8XQ2M4",
+          "utterance": "주말엔 보통 혼자 시간 보내는 편이에요",
+          "question": "내 페르소나가 다른 유저에게 한 말이에요. 나다운 대답인가요?",
+          "question_version": "Q1",
+          "expires_at": "2026-11-03T21:00:00+09:00"
+        }
+      ]
+    },
+
+    "FeedbackCardAnswerRequest": {
+      "title": "POST /feedback-cards/{card_id}/answer 요청",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "user_id", "answer", "answered_at", "consent_version"],
+      "properties": {
+        "request_id": { "$ref": "#/$defs/RequestId" },
+        "user_id": {
+          "$ref": "#/$defs/UserId",
+          "description": "카드 주인과 같아야 한다. 다르면 403."
+        },
+        "answer": { "$ref": "#/$defs/FeedbackAnswer" },
+        "answered_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "사용자가 버튼을 누른 시각. 타임존 포함."
+        },
+        "consent_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "응답 시점에 동의한 약관 버전."
+        }
+      },
+      "examples": [
+        {
+          "request_id": "550e8400-e29b-41d4-a716-446655440011",
+          "user_id": "user-1001",
+          "answer": "NO",
+          "answered_at": "2026-11-02T21:14:03+09:00",
+          "consent_version": "terms-2026-11"
+        }
+      ]
+    },
+
+    "FeedbackCardAnswerResponse": {
+      "title": "POST /feedback-cards/{card_id}/answer 응답 200",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["card_id", "status"],
+      "properties": {
+        "card_id": { "$ref": "#/$defs/CardId" },
+        "status": { "const": "ANSWERED" }
+      },
+      "examples": [
+        { "card_id": "fc_01JB8XQ2M4", "status": "ANSWERED" }
+      ]
+    },
+
+    "ErrorResponse": {
+      "title": "401 · 403 · 404 · 409 응답",
+      "type": "object",
+      "required": ["detail"],
+      "properties": {
+        "detail": { "type": "string" }
+      },
+      "examples": [
+        { "detail": "card expired" }
+      ]
+    },
+
+    "ValidationErrorResponse": {
+      "title": "422 응답 (FastAPI 기본 형식)",
+      "type": "object",
+      "required": ["detail"],
+      "properties": {
+        "detail": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "loc", "msg"],
+            "properties": {
+              "type": { "type": "string" },
+              "loc": { "type": "array", "items": { "type": ["string", "integer"] } },
+              "msg": { "type": "string" },
+              "input": {}
+            }
+          }
+        }
+      },
+      "examples": [
+        {
+          "detail": [
+            {
+              "type": "enum",
+              "loc": ["body", "answer"],
+              "msg": "Input should be 'YES' or 'NO'",
+              "input": "SKIP",
+              "ctx": { "expected": "'YES' or 'NO'" }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -8,6 +8,7 @@ from app.features.persona.agents import RUBRIC, ExtractionAgent
 from app.features.persona.schemas import RawExtraction
 from training.extraction.build_sft import gold_answers, has_gold_answer, main, prompt_sha256, skip_reason, to_record
 from training.tagging.data import normalize
+from training.tagging.train_lora import assert_fits
 
 HISTORY = [
     {"role": "assistant", "content": "연락은 얼마나 자주 하세요?"},
@@ -66,11 +67,41 @@ def test_bad_rows_are_skipped(overrides, reason):
 
 
 def test_mid_seed_never_counts_as_opposite():
-    kept = row(
-        context={"seedLevels": {"contact_rhythm": "mid"}},
-        output={"contact_rhythm": 90, "narrative": {"body": "자주 연락해요"}},
-    )
+    narrative = {"headline": "연락이 잦은 타입", "body": "자주 연락해요", "traits": []}
+    kept = row(context={"seedLevels": {"contact_rhythm": "mid"}}, output={"contact_rhythm": 90, "narrative": narrative})
     assert skip_reason(kept) == ""
+
+
+def test_output_the_service_would_drop_is_skipped():
+    narrative = {"headline": "진지한 타입", "body": "가볍게 만나는 쪽을 좋아해요.", "traits": []}
+    contradiction = row(
+        input={"history": HISTORY, "answered": ["seriousness"]},
+        context={},
+        output={"seriousness": 90, "narrative": narrative},
+    )
+    assert skip_reason(contradiction) == "서술과 점수 모순"
+
+    card = {"category": "intimacy", "title": "천천히 가까워지는 편", "content": "서서히 알아가요."}
+    output = {**row()["output"], "summaries": [card]}
+    assert skip_reason(row(output=output)) == "근거 없는 카드"
+
+
+class _FakeTokenizer:
+    def apply_chat_template(self, messages, tokenize):
+        assert tokenize is False
+        return " ".join(m["content"] for m in messages)
+
+    def __call__(self, text, add_special_tokens):
+        assert add_special_tokens is False
+        return {"input_ids": text.split()}
+
+
+def test_training_refuses_to_truncate_completions():
+    rows = [{"prompt": [{"role": "user", "content": "a b c"}], "completion": [{"role": "assistant", "content": "d"}]}]
+
+    assert_fits(rows, _FakeTokenizer(), max_length=4)
+    with pytest.raises(SystemExit, match="4 토큰"):
+        assert_fits(rows, _FakeTokenizer(), max_length=3)
 
 
 def test_gold_answers_are_found_in_both_dataset_shapes(tmp_path):

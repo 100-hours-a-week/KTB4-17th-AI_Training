@@ -10,7 +10,7 @@ RUBRIC 을 고치면 이미 학습한 어댑터와 입력이 달라지므로 man
   - 골드셋(source=gold) 행과 호출·파싱·스키마 실패 행
   - 답하지 않은 차원에 점수를 낸 행. 학생이 그대로 배우면 환각이다 (F-05)
   - 스키마에 없는 최상위 키를 낸 행과 narrative 가 없는 행. 운영에서는 키를 버리지만 학생은 형식을 틀리게 배운다
-  - 운영 사후 필터가 지우는 짐작 어미가 서술에 있는 행
+  - 운영 사후 필터가 지우는 출력이 있는 행: 짐작 어미, 점수와 모순되는 서술, 근거 있는 점수가 없는 area 의 카드
   - 시드 성향과 정반대 구간(낮음↔높음)으로 점수를 낸 행. teacher 오류일 가능성이 높다
   - 평가 데이터셋과 같은 답이 있는 세션. 합성 생성기가 누수 세션을 버리는 규칙과 같다
 """
@@ -28,8 +28,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.features.persona.agents import RUBRIC, ExtractionAgent  # noqa: E402
-from app.features.persona.schemas import RawExtraction  # noqa: E402
-from app.features.persona.service import _SPECULATION  # noqa: E402
+from app.features.persona.schemas import SCORED, RawExtraction  # noqa: E402
+from app.features.persona.service import _SPECULATION, narrative_contradiction, valid_summaries  # noqa: E402
 from training.tagging.build_sft import is_validation  # noqa: E402
 from training.tagging.data import normalize  # noqa: E402
 
@@ -111,6 +111,15 @@ def skip_reason(row: dict) -> str:
         return "짐작 어미"
     if _opposite_to_seed(output, (row.get("context") or {}).get("seedLevels") or {}):
         return "시드와 정반대 점수"
+    # PersonaService.build_persona 의 후처리와 같은 판정. 운영이 버릴 출력을 학생이 배우면 결과 화면에서 서술·카드가 사라진다
+    raw = RawExtraction.model_validate(output)
+    answered = set(row["input"]["answered"])
+    scores = {key: getattr(raw, key) if key in answered else None for key in SCORED}
+    if narrative_contradiction(scores, raw.narrative):
+        return "서술과 점수 모순"
+    grounded = {SCORED[key].area for key, score in scores.items() if score is not None}
+    if any(card["category"] not in grounded for card in valid_summaries(raw.summaries)):
+        return "근거 없는 카드"
     return ""
 
 

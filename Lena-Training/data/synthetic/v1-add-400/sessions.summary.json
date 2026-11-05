@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-11-03T08:28:24+00:00",
+  "out": "data/synthetic/v1-add-400/sessions.jsonl",
+  "requested": 400,
+  "written": 400,
+  "droppedForGoldLeak": 0,
+  "failed": 0,
+  "elapsedSeconds": 1489.0,
+  "models": {
+    "simulatorModel": "google/gemini-3.8-flash",
+    "simulatorPrompt": "v2",
+    "conversationModel": "google/gemini-2.5-flash-lite"
+  },
+  "usage": {
+    "simulator_calls": 4186,
+    "simulator_prompt_tokens": 5216750,
+    "simulator_completion_tokens": 253689,
+    "conversation_calls": 3998
+  },
+  "cost": {
+    "simulatorTokens": {
+      "prompt": 5216750,
+      "completion": 253689
+    },
+    "conversationTokensEstimated": {
+      "prompt": 4849574,
+      "completion": 331834
+    },
+    "totalTokens": {
+      "prompt": 10066324,
+      "completion": 585523
+    }
+  },
+  "dropped": [],
+  "failures": []
+}

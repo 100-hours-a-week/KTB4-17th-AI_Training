@@ -13,11 +13,11 @@
 | 앱 호출 (`name=`) | 보내는 모델 | 설정 |
 |---|---|---|
 | `persona-tagging` | `tagging-v1` (Kanana + LoRA) | `SLM_TAGGING_MODEL` |
-| `persona-extraction`, `persona-extraction-style` | `kanana` (기본 모델) | `SLM_EXTRACTION_MODEL` |
-| 그 밖의 모든 호출 | Gemini | `LLM_MODEL` |
+| `persona-extraction` | `extraction-v1` (Kanana + LoRA) 또는 `kanana` (기본 모델) | `SLM_EXTRACTION_MODEL` |
+| 그 밖의 모든 호출 (`persona-extraction-style` 포함) | Gemini | `LLM_MODEL` |
 
-추출용 LoRA 를 따로 학습하면 `config.yaml` 의 `max-loras` 를 올리고 `start.sh` 에 `--lora-modules` 를 하나 더 붙인 뒤
-`SLM_EXTRACTION_MODEL` 을 그 이름으로 바꾼다. 앱 코드는 바꾸지 않는다.
+`start.sh` 는 `/workspace/adapters/{tagging-v1,extraction-v1}` 중 있는 어댑터만 LoRA 로 올린다.
+스타일 분석(`persona-extraction-style`)은 프롬프트가 달라 추출 어댑터로 보내지 않는다.
 
 ## 파일
 

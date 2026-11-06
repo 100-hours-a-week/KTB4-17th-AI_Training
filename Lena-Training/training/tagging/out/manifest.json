@@ -1,11 +1,13 @@
 {
-  "input": "data/teacher/qwen-fp8-sub1000/tagging-sft-a0.8.jsonl",
-  "input_sha256": "fb9fbcc34244a3a6be3ae538d48f4b775b25e32c9989df397fb49cd96eebb8b2",
-  "prompt_sha256": "67757f18f2f3a9691392343e43c64915c90b92ae52a1e2f982d6e94da71c8ed3",
+  "input": "data/teacher/qwen-fp8-v1397/tagging-sft-a0.8.jsonl",
+  "input_sha256": "65f6a16865b2e2d136495a0b766985f7d3c2febf7fb6d104cfdc2b701ef84863",
+  "prompt_sha256": "5159ed7bc8124237b56c4abd237085d462d11913beb648ceb661734f1db5a0ce",
   "counts": {
-    "train": 6915,
-    "val": 828
+    "train": 7827,
+    "val": 803
   },
+  "max_primary": 2,
+  "dropped_by_max_primary": 1592,
   "sources": [
     "synthetic"
   ],

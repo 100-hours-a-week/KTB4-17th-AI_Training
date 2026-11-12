@@ -53,9 +53,31 @@ flash-lite 3.1 기준 0.33 → 0.88 이 됐다. 그래서 teacher 라벨을 학�
 uv run python scripts/generate_synthetic_onboarding.py --n 200 --out data/synthetic/sessions.jsonl   # 시드 성향 → 합성 온보딩
 uv run python scripts/label_with_teacher.py --synthetic data/synthetic/sessions.jsonl --out-dir data/teacher/run1
 uv run python scripts/check_synthetic_labels.py data/teacher/run1 --sessions data/synthetic/sessions.jsonl
-uv run python training/tagging/from_teacher.py data/teacher/run1/tagging.jsonl --out data/tagging.jsonl
+uv run python training/tagging/from_teacher.py data/teacher/run1/tagging.jsonl --out data/tagging.jsonl --min-vote-share 1.0
 uv run python training/tagging/build_sft.py data/tagging.jsonl --allow-unreviewed   # 검수 전에는 시험용으로만
 ```
+
+#### 교사 라벨링을 API 대신 Colab GPU 로
+
+`training/notebooks/teacher_labeling_colab.ipynb` — `Qwen/Qwen3.8-27B-FP8` 를 vLLM(0.30.0)으로 올리고 `label_with_teacher.py` 를
+그 서버로 돌린다(A100 40GB 이상). FP8 이라 API(BF16) 라벨과 조금 다를 수 있어 **골드셋 63건 점수를 먼저 비교**하고(API: primary F1 83.1),
+통과하면 전체를 라벨링해 `sft/` 까지 만든다. 추론 모드는 API 때처럼 끈다(`enable_thinking: false`).
+
+#### 시뮬레이터를 API 대신 프론티어 모델 채팅(구독)으로
+
+`scripts/manual_simulator.py` 가 같은 시드 프로필·주제 순서·답변 방식으로 **붙여넣기용 프롬프트**(세션 5개씩)를 만들고,
+채팅이 돌려준 JSON 을 위와 같은 세션 JSONL 로 바꾼다. 하루 질문은 주제의 시드 질문이라 API 비용이 0 이다(운영 질문보다 짧다).
+
+```bash
+uv run python scripts/manual_simulator.py export --n 40 --seed 300 --out-dir data/manual/run300
+# batch_000.md … 를 채팅에 하나씩 붙여 넣고, 답(JSON)을 data/manual/run300/answers/batch_000.json … 으로 저장
+# 또는 구독 CLI 로 자동 실행 (이미 받은 묶음은 건너뜀, 답이 빠지면 다시 시도)
+uv run python scripts/manual_simulator.py run data/manual/run300 --cmd 'gemini -m <모델> -p "{prompt}"'
+uv run python scripts/manual_simulator.py import data/manual/run300 --model <모델 이름> --out data/synthetic/manual-run300.jsonl
+```
+
+시뮬레이터 모델이 바뀌었으므로 **처음 40세션은 충실도부터 잰다** (`check_synthetic_labels.py` 의 구간 일치 —
+API 기본값 Gemini 3.8 flash 0.87). 시드는 API 생성(100·200)과 겹치지 않게 쓴다.
 
 teacher 라벨은 `reviewed_by` 가 비어 있어 사람이 확인하기 전에는 학습에 들어가지 않는다. 검수는 5회 샘플 판정 일치율
 (`aggregate.agreement`)이 낮은 것부터 본다. teacher 자체의 골드셋 점수는 `scripts/score_teacher_gold.py` 로 잰다.
@@ -84,6 +106,30 @@ python training/tagging/train_lora.py --base-model <HF 모델 id> \
 - `adapter/` 에 `data_manifest.json`(데이터·프롬프트 해시)과 `training_args.json` 이 함께 저장된다. 어댑터는 HF Hub(private)나 S3 에 버전으로 올린다.
 - 기본 모델은 한국어 성능과 **상업 이용 가능한 라이선스**를 함께 본다. 상업 이용이 제한된 라이선스도 있다.
 - `trl` 은 1.14.0 으로 고정했다. 1.15 는 Triton 커널을 무조건 써서 CUDA 가 없으면 돌지 않는다. `--max-steps 4` 로 노트북에서도 파이프라인을 점검할 수 있다.
+- 학습이 끝나면 `output-dir/run_metrics.json` 에 최대 GPU 메모리·학습 시간·비용(`--gpu-hourly-usd`)·eval loss 가 남는다.
+
+### LoRA vs QLoRA 비교
+
+같은 인자로 `--load-in-4bit` 만 바꿔 두 번 학습하고 `run_metrics.json` 과 평가 점수로 고른다.
+Colab 은 `training/notebooks/lora_qlora_compare_colab.ipynb` (L4·A100 권장 — T4 는 BF16 이 없어 LoRA 가 FP32 로 올라간다).
+결과·지표·게이트를 모으는 표는 `training/RESULTS.md`.
+품질 차이가 1%p 이내면 더 싼 쪽, 넘으면 품질이 좋은 쪽을 고르되 그 차이가 비용만큼 가치 있는지 표로 남긴다(제안).
+
+### 로컬 GPU (RTX 3060 노트북 6GB · RAM 32GB)
+
+Kanana-2 3B(약 3.2B 파라미터)는 BF16 가중치만 약 6.4GB 라 **LoRA 는 6GB 에 안 들어간다. QLoRA 태깅만 가능**하고, 추출(4,096 토큰)은
+출력층 계산(4,096 × 어휘 128,256)만 수 GB 라 6GB 에서는 어렵다. 리눅스(WSL2 Ubuntu 권장 — bitsandbytes·CUDA 설치가 쉽다)에서:
+
+```bash
+pip install -r training/requirements.txt
+python training/tagging/train_lora.py --base-model kakaocorp/kanana-2-3b-instruct \
+    --revision 6a5d7889964c4c590299d16e309eabab1f73f8a9 --data-dir training/tagging/out --output-dir /tmp/trial \
+    --load-in-4bit --gradient-checkpointing --max-length 1280 --batch-size 1 --grad-accum 16 --max-steps 20
+```
+
+- 먼저 `--max-steps 20` 으로 메모리(`run_metrics.json` 의 `train_reserved_gib`)와 스텝당 시간을 본다. 화면 출력에도 VRAM 이 쓰여 실제 여유는 5GB 남짓이다.
+- 배치 1이라 L4 보다 몇 배 느리다(태깅 3에폭 수 시간 예상 — 시험 실행 값으로 다시 잰다). 전기료 말고는 비용이 없어 시험·디버깅용으로 좋다.
+- LoRA·QLoRA **비교**는 같은 GPU 에서 해야 하므로 로컬이 아니라 L4 이상에서 한다.
 
 ### 추출 어댑터 (`training/extraction/`)
 

@@ -17,6 +17,7 @@ student 가 배울 출력 형식이 운영과 같아야 하기 때문이다. tea
 
 모델·엔드포인트는 TEACHER_LLM_BASE_URL / TEACHER_LLM_MODEL / TEACHER_LLM_API_KEY, 비어 있으면 LLM_* 를 쓴다.
 OpenRouter 를 쓰면 입력을 학습에 쓰는 호스팅 업체는 제외(data_collection=deny)하고, 추론 모드는 기본으로 끈다.
+직접 서빙(Colab vLLM — training/notebooks/teacher_labeling_colab.ipynb)이면 chat_template_kwargs 로 추론을 끈다.
 """
 
 from __future__ import annotations

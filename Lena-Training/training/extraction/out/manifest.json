@@ -1,17 +1,19 @@
 {
-  "input": "data/teacher/qwen-fp8-sub1000/extraction.jsonl",
-  "input_sha256": "43919dc47a3e0640d07a787d30ee132885c588ab597a0a9eb543e5989cd6d4a6",
+  "input": "data/teacher/qwen-fp8-v1397/extraction.jsonl",
+  "input_sha256": "0fe8c47e4f148fea108a006426c42a205f5551df069a533e49544cba9d12f290",
   "prompt_sha256": "83568694051985735d5b833c57fa8bf13d7b0526365a9d9d95c3c5e4095677aa",
   "counts": {
-    "train": 851,
-    "val": 84
+    "train": 1073,
+    "val": 109
   },
   "skipped": {
-    "시드와 정반대 점수": 38,
-    "답하지 않은 차원에 점수": 8,
+    "짐작 어미": 16,
+    "스키마에 없는 키": 8,
+    "시드와 정반대 점수": 94,
+    "서술과 점수 모순": 73,
+    "답하지 않은 차원에 점수": 18,
     "평가 데이터셋과 같은 답변": 3,
-    "스키마에 없는 키": 4,
-    "짐작 어미": 9
+    "근거 없는 카드": 3
   },
   "sources": [
     "synthetic"

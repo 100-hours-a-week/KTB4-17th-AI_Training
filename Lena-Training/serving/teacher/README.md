@@ -13,6 +13,8 @@ Mac (scripts/label_with_teacher.py) ── TEACHER_LLM_* ──▶ RunPod H100 �
 | --- | --- |
 | 모델 | `Qwen/Qwen3.8-27B` 커밋 `1d4bf0f` (apache-2.0, BF16 55.6GB, `Qwen3_5ForConditionalGeneration`) |
 | GPU | H100 80GB 1장. 가중치가 55.6GB 라 48GB 이하 GPU 에는 BF16 로 안 들어간다 |
+| 싼 선택지 | A40·RTX A6000 48GB 1장 + 공식 FP8 `Qwen/Qwen3.8-27B-FP8` 커밋 `017b9c7` (30.9GB, `config.a40-fp8.yaml`). L4 24GB 에는 FP8 도 안 들어간다 |
+| 비교 후보 | `kakaocorp/kanana-2-30b-a3b-instruct-2601` 커밋 `4a781fe` (MoE 30B·활성 3B, BF16 61.3GB, Kanana License, `config.kanana-30b.yaml`). A40 48GB 2장 |
 | 볼륨 | 100GB, `/workspace` (가중치 + 컴파일 캐시) |
 | 호출 수 | 골드 63×5 + 24 = 339회, 합성 10,279×5 + 997 = 52,392회 |
 | 추론(thinking) | 끈다. Qwen3.8 템플릿 기본값이 켜짐이라 스크립트가 요청마다 `chat_template_kwargs.enable_thinking=false` 를 보낸다 |
@@ -27,12 +29,39 @@ Mac (scripts/label_with_teacher.py) ── TEACHER_LLM_* ──▶ RunPod H100 �
 4. Pod 터미널에서:
 
 ```bash
-cd /workspace && git clone https://github.com/100-hours-a-week/KTB4-17th-AI.git ai   # 이미 있으면 git -C ai pull
+cd /workspace && git clone -b dev https://github.com/100-hours-a-week/KTB4-17th-AI.git ai   # 이미 있으면 git -C ai pull
 bash ai/serving/teacher/start.sh
 ```
 
 첫 기동은 다운로드 때문에 수십 분 걸린다. 로그에 `Application startup complete` 가 나오면 된다.
 `KV cache` / `Maximum concurrency` 줄을 보고 동시 요청 수(아래 `--concurrency`)를 그 값 이하로 잡는다.
+
+### A40·A6000 48GB 로 띄울 때 (FP8)
+
+3번의 GPU 를 A40 또는 RTX A6000 48GB 로 고르고(볼륨은 50GB 면 된다), 4번 대신:
+
+```bash
+VLLM_CONFIG=/workspace/ai/serving/teacher/config.a40-fp8.yaml bash /workspace/ai/serving/teacher/start.sh
+```
+
+- 아래 `TEACHER_LLM_MODEL`·curl 의 모델 이름은 `qwen3.8-27b-fp8` 로 바꾼다. 라벨 메타데이터에 정밀도가 남는다.
+- Ampere 라 FP8 연산이 없어 가중치만 FP8 이고 계산은 BF16 이다. 골드 339회는 충분하지만 합성 52,392회는 H100 보다 훨씬 오래 걸린다.
+- 골드셋을 FP8 로 쟀으면 합성 라벨링도 같은 설정으로 한다. 정밀도가 다르면 검증한 teacher 와 라벨을 단 teacher 가 달라진다.
+
+### Qwen 과 Kanana 30B 를 골드셋으로 비교할 때 (A40 2장)
+
+Pod 하나에서 두 모델을 차례로 띄운다. 3번의 GPU 를 A40 또는 RTX A6000 48GB × **2** 로 고르고, 볼륨은 120GB 로 잡는다(가중치 61.3 + 30.9GB).
+
+```bash
+# Kanana 30B — BF16 을 2장에 나눠 올린다 (tensor-parallel-size 2)
+VLLM_CONFIG=/workspace/ai/serving/teacher/config.kanana-30b.yaml bash /workspace/ai/serving/teacher/start.sh
+# 골드 라벨링이 끝나면 Ctrl+C 로 내리고 Qwen FP8 을 띄운다 (1장만 쓴다)
+VLLM_CONFIG=/workspace/ai/serving/teacher/config.a40-fp8.yaml bash /workspace/ai/serving/teacher/start.sh
+```
+
+- 모델 이름: Kanana 는 `kanana-2-30b`, Qwen 은 `qwen3.8-27b-fp8`.
+- Kanana 는 공식 FP8 이 없어 BF16, Qwen 은 FP8 로 잰다. 각자 대량 라벨링 때 쓸 설정이다. 결과에 정밀도를 같이 적는다.
+- Kanana 를 teacher 로 고르면 합성 라벨링도 2장 Pod 로 한다.
 
 ## 2. Mac 에서 연결 확인
 

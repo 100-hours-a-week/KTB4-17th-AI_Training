@@ -37,6 +37,8 @@ def test_convert_skips_gold_failed_and_low_agreement_rows():
     assert convert(teacher_row(aggregate={"validSamples": 0}), min_agreement=0.6)[1] == "다수결 없음"
     low = teacher_row(aggregate={**teacher_row()["aggregate"], "agreement": 0.4})
     assert convert(low, min_agreement=0.6)[1] == "판정 일치율 낮음"
+    leaked = frozenset({"집에서빵굽는게제일좋아요"})
+    assert convert(teacher_row(), min_agreement=0.6, leaked=leaked)[1] == "평가 데이터셋과 같은 답변"
 
 
 def test_off_topic_majority_clears_tags():
@@ -53,3 +55,20 @@ def test_main_writes_jsonl(tmp_path, capsys):
     assert main([str(src), "--out", str(out)]) == 0
     assert len(out.read_text(encoding="utf-8").splitlines()) == 1
     assert json.loads(capsys.readouterr().out)["skipped"] == {"합성 데이터가 아님": 1}
+
+
+def test_min_vote_share_keeps_only_dimensions_every_sample_chose():
+    agg = {
+        "validSamples": 5,
+        "agreement": 0.8,
+        "primaryVotes": {"interests": 1.0, "disclosure": 0.6},
+        "secondaryVotes": {"routine": 1.0, "openness": 0.8},
+        "majority": {"primary": ["disclosure", "interests"], "secondary": ["openness", "routine"], "off_topic": False},
+    }
+
+    majority, _ = convert(teacher_row(aggregate=agg), min_agreement=0.6)
+    unanimous, _ = convert(teacher_row(aggregate=agg), min_agreement=0.6, min_vote_share=1.0)
+
+    assert majority.primary == ["disclosure", "interests"]
+    assert unanimous.primary == ["interests"]
+    assert unanimous.secondary == ["routine"]

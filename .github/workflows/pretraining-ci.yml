@@ -1,0 +1,101 @@
+name: Model pre-training CI
+
+on:
+  pull_request:
+    paths:
+      - 'Lena-Training/**'
+      - 'ci/**'
+      - 'tests/pretraining/**'
+      - 'docs/pretraining-ci.md'
+      - '.github/workflows/pretraining-ci.yml'
+  push:
+    branches: [main, 'codex/**']
+    paths:
+      - 'Lena-Training/**'
+      - 'ci/**'
+      - 'tests/pretraining/**'
+      - 'docs/pretraining-ci.md'
+      - '.github/workflows/pretraining-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: model-pretraining-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pretraining:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+      HF_DATASETS_OFFLINE: '1'
+      CUDA_VISIBLE_DEVICES: ''
+      PYTHONDONTWRITEBYTECODE: '1'
+      COVERAGE_FILE: reports/.coverage
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Install only pinned CI tools
+        run: python -m pip install --disable-pip-version-check -r ci/requirements.txt
+      - name: Test validators and report failure behavior
+        id: unit
+        if: always()
+        run: |
+          mkdir -p reports
+          python -m pytest tests/pretraining --junitxml=reports/unit-junit.xml --cov=ci.validators --cov-report=json:reports/coverage.json --cov-report=xml:reports/coverage.xml --cov-report=term-missing
+      - name: Check Python syntax and safe trainer CLI help
+        id: contracts
+        if: always()
+        run: python -m ci.contracts --output-dir reports
+      - name: Audit actual saved SFT data
+        id: preflight
+        if: always()
+        run: python -m ci.preflight --output-dir reports
+      - name: Publish aggregate Actions summary
+        if: always()
+        env:
+          UNIT_OUTCOME: ${{ steps.unit.outcome }}
+          PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}
+          CONTRACTS_OUTCOME: ${{ steps.contracts.outcome }}
+        run: |
+          unit_exit=1
+          preflight_exit=1
+          contracts_exit=1
+          if [ "$UNIT_OUTCOME" = success ]; then unit_exit=0; fi
+          if [ "$PREFLIGHT_OUTCOME" = success ]; then preflight_exit=0; fi
+          if [ "$CONTRACTS_OUTCOME" = success ]; then contracts_exit=0; fi
+          set +e
+          python -m ci.report --output-dir reports --unit-exit "$unit_exit" --preflight-exit "$preflight_exit" --contracts-exit "$contracts_exit"
+          report_exit=$?
+          if [ -f reports/summary.md ]; then
+            cat reports/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Model pre-training CI failed before aggregate evidence was available. Training was not executed.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$report_exit"
+      - name: Upload sanitized pre-training evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: model-pretraining-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            reports/preflight.json
+            reports/preflight-junit.xml
+            reports/contracts.json
+            reports/unit-junit.xml
+            reports/coverage.json
+            reports/coverage.xml
+            reports/summary.json
+            reports/summary.md
+          if-no-files-found: error
+          retention-days: 14

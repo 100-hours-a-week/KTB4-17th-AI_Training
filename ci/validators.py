@@ -32,7 +32,19 @@ def strict_json(text):
                 raise ValueError('duplicate JSON key')
             result[key] = value
         return result
-    return json.loads(text, parse_constant=reject_constant, parse_float=finite_float, object_pairs_hook=reject_duplicates)
+    parsed = json.loads(text, parse_constant=reject_constant, parse_float=finite_float, object_pairs_hook=reject_duplicates)
+    pending = [parsed]
+    while pending:
+        value = pending.pop()
+        if isinstance(value, str):
+            # Escaped lone surrogates decode as strings but are not Unicode scalar text.
+            value.encode('utf-8')
+        elif isinstance(value, dict):
+            pending.extend(value.keys())
+            pending.extend(value.values())
+        elif isinstance(value, list):
+            pending.extend(value)
+    return parsed
 
 
 def digest(data):

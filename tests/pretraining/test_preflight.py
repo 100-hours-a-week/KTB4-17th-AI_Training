@@ -252,3 +252,38 @@ def test_source_row_conservation_detects_unaccounted_drop(extraction):
     manifest['input_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
     manifest_path.write_text(json.dumps(manifest))
     assert 'source_count_mismatch' in codes(validate_dataset(extraction[0],'extraction'))
+
+
+@pytest.mark.parametrize('location', ['user', 'system', 'completion', 'source_id'])
+def test_unpaired_unicode_surrogate_produces_sanitized_json_and_junit(dataset, location):
+    row = dataset[4][0]
+    if location == 'source_id':
+        write_jsonl(dataset[3], [dict(id='\ud800', familyId='family-0')])
+    else:
+        message = row['completion'][0] if location == 'completion' else row['prompt'][0 if location == 'system' else 1]
+        message['content'] = '\ud800'
+        write_jsonl(dataset[1] / 'train.jsonl', [row])
+    out = dataset[0] / 'reports'
+    run = subprocess.run([sys.executable, '-m', 'ci.preflight', '--root', str(dataset[0]), '--output-dir', str(out)], cwd=REPO, capture_output=True, text=True)
+    assert run.returncode == 1
+    result = json.loads((out / 'preflight.json').read_text())
+    tagging = result['checks'][0]
+    assert tagging['status'] == 'failed'
+    assert 'invalid_jsonl' in codes(tagging)
+    from xml.etree import ElementTree as ET
+    assert ET.parse(out / 'preflight-junit.xml').findall('.//failure')
+    assert 'Traceback' not in run.stderr
+    assert '\\ud800' not in json.dumps(result)
+
+
+def test_input_symlink_cycle_still_writes_failed_preflight_evidence(dataset):
+    path = dataset[1] / 'train.jsonl'
+    path.unlink()
+    path.symlink_to(path.name)
+    out = dataset[0] / 'reports'
+    run = subprocess.run([sys.executable, '-m', 'ci.preflight', '--root', str(dataset[0]), '--output-dir', str(out)], cwd=REPO, capture_output=True, text=True)
+    assert run.returncode == 1
+    result = json.loads((out / 'preflight.json').read_text())
+    assert result['checks'][0]['status'] == 'failed'
+    assert (out / 'preflight-junit.xml').exists()
+    assert 'Traceback' not in run.stderr

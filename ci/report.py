@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -10,12 +11,21 @@ from ci.preflight import identity
 from ci.validators import strict_json
 
 
+def identifier(value):
+    return isinstance(value, str) and re.fullmatch(r'[a-z][a-z0-9_]*', value) is not None
+
+
 def valid_checks(checks):
+    # Every field consumed by Markdown must be present and validated before publication.
     return isinstance(checks, list) and bool(checks) and all(
         isinstance(c, dict) and c.get('status') in ('passed', 'failed')
-        and isinstance(c.get('name'), str) and isinstance(c.get('metrics', {}), dict)
-        and isinstance(c.get('duration_seconds', 0), (int, float))
-        and all(isinstance(c.get(k, []), list) and all(isinstance(e, dict) and isinstance(e.get('code'), str) and type(e.get('count', 1)) is int for e in c.get(k, [])) for k in ('errors', 'warnings'))
+        and identifier(c.get('name')) and isinstance(c.get('metrics'), dict)
+        and all(identifier(k) and type(v) in (int, float) and v >= 0 for k, v in c['metrics'].items())
+        and type(c.get('duration_seconds')) in (int, float) and c['duration_seconds'] >= 0
+        and all(isinstance(c.get(k, []), list) and all(
+            isinstance(e, dict) and identifier(e.get('code'))
+            and type(e.get('count')) is int and e['count'] >= 0
+            for e in c.get(k, [])) for k in ('errors', 'warnings'))
         for c in checks)
 
 
@@ -36,12 +46,16 @@ def main(argv=None):
         preflight = strict_json((out / 'preflight.json').read_text(encoding='utf-8'))
         if not isinstance(preflight,dict) or preflight.get('status') not in {'passed','failed'} or not valid_checks(preflight.get('checks')):
             raise ValueError('invalid preflight')
+        readiness = preflight.get('readiness_reasons', [])
+        if not isinstance(readiness, list) or not all(identifier(reason) for reason in readiness) or preflight.get('training_ready', False) is not False:
+            raise ValueError('invalid preflight')
         summary['checks'] = preflight['checks']
-        summary['readiness_reasons'] = preflight.get('readiness_reasons', [])
+        summary['readiness_reasons'] = readiness
         if preflight['status'] != 'passed' or any(c.get('status') != 'passed' or c.get('errors') for c in preflight['checks']):
             summary['errors'].append('preflight_failed')
     except (OSError, ValueError, TypeError, AttributeError, KeyError, RecursionError):
         summary['checks'] = []
+        summary['readiness_reasons'] = []
         summary['errors'].append('preflight_evidence_missing_or_invalid')
     try:
         tree = ET.parse(out / 'unit-junit.xml').getroot()
@@ -57,13 +71,19 @@ def main(argv=None):
         summary['errors'].append('junit_evidence_missing_or_invalid')
     try:
         coverage = strict_json((out / 'coverage.json').read_text(encoding='utf-8'))
+        if not isinstance(coverage, dict) or not isinstance(coverage.get('totals'), dict):
+            raise ValueError('invalid coverage')
         totals = coverage['totals']
+        if (type(totals.get('covered_lines')) is not int or type(totals.get('num_statements')) is not int
+                or type(totals.get('percent_covered')) not in (int, float)
+                or not (0 <= totals['covered_lines'] <= totals['num_statements'] and totals['num_statements'] > 0
+                        and 0 <= totals['percent_covered'] <= 100)):
+            raise ValueError('invalid coverage')
+        if not isinstance(coverage.get('files'), dict) or set(coverage['files']) != {'ci/validators.py'} or not isinstance(coverage['files']['ci/validators.py'], dict):
+            raise ValueError('unexpected coverage scope')
+        # Publish only after validating totals and source scope together.
         summary['coverage'] = {key:totals[key] for key in ('covered_lines','num_statements','percent_covered')}
         summary['coverage']['scope'] = 'ci/validators.py only'
-        if not (0 <= totals['covered_lines'] <= totals['num_statements'] and totals['num_statements'] > 0 and 0 <= totals['percent_covered'] <= 100):
-            raise ValueError('invalid coverage')
-        if set(coverage.get('files',{})) != {'ci/validators.py'}:
-            raise ValueError('unexpected coverage scope')
     except (OSError, ValueError, TypeError, KeyError, RecursionError):
         summary['errors'].append('coverage_evidence_missing_or_invalid')
     try:
@@ -78,11 +98,13 @@ def main(argv=None):
             summary['errors'].append(f'{name}_command_failed')
     summary['status'] = 'failed' if summary['errors'] else 'passed'
     (out / 'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
+    coverage_text = (f"Coverage: {summary['coverage']['percent_covered']}% (**ci/validators.py only**, fixture execution; no training/model coverage)"
+                     if summary['coverage'] else 'Coverage: unavailable (evidence missing or invalid)')
     lines = ['# Model pre-training CI', '', f"Status: **{summary['status']}** · training_ready: **false**", '',
              'training_executed=false · external_model_downloads=0 · gpu_used=false', '',
              f"Commit: `{summary['commit']}` · run: `{summary['run_id']}` · UTC: {summary['generated_at']}", '',
              f"Fixture tests: {summary['unit_tests'].get('tests', 'unavailable')} · failures: {summary['unit_tests'].get('failures', 'unavailable')} · errors: {summary['unit_tests'].get('errors', 'unavailable')}",
-             f"Coverage: {summary['coverage'].get('percent_covered','unavailable')}% (**ci/validators.py only**, fixture execution; no training/model coverage)", '',
+             coverage_text, '',
              '| Dataset | Result | Train | Validation | Joined rows | Train families | Validation families | Overlap families | Seconds |',
              '| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
     for check in summary['checks']:

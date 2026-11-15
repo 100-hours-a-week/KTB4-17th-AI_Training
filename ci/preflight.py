@@ -7,6 +7,7 @@ import json
 import os
 import re
 import subprocess
+import time
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -32,7 +33,17 @@ def main(argv=None):
     parser.add_argument('--output-dir', type=Path, default=Path('reports'))
     args = parser.parse_args(argv)
     args.output_dir.mkdir(parents=True,exist_ok=True)
-    checks = [validate_dataset(args.root / 'Lena-Training', kind) for kind in ('tagging','extraction')]
+    checks = []
+    for kind in ('tagging', 'extraction'):
+        start = time.perf_counter()
+        try:
+            checks.append(validate_dataset(args.root / 'Lena-Training', kind))
+        except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, OverflowError):
+            # Preserve evidence for ordinary corrupt-input/path errors; never expose values.
+            checks.append(dict(name=kind, status='failed', duration_seconds=round(time.perf_counter()-start, 6),
+                               errors=[dict(code='input_validation_exception', count=1)], warnings=[], skips=[],
+                               metrics={}, files=[], training_ready=False,
+                               readiness_reasons=['artifact_validation_failed', 'input_validation_exception']))
     failed = any(check['status'] == 'failed' for check in checks)
     result = dict(schema_version=1, **identity(args.root), status='failed' if failed else 'passed', checks=checks,
                   training_executed=False, external_model_downloads=0, gpu_used=False, training_ready=False,

@@ -125,14 +125,14 @@ def validate_dataset(base: Path, kind: str) -> dict:
 
     manifest = manifest_input(f'training/{kind}/out/manifest.json')
     counts, skipped, dropped = manifest.get('counts'), manifest.get('skipped',{}), manifest.get('dropped_by_max_primary',0)
-    valid_manifest = (isinstance(counts,dict) and set(counts)=={'train','val'} and all(type(v) is int and v>0 for v in counts.values())
+    valid_manifest = (isinstance(counts,dict) and set(counts)=={'train','val'} and all(type(v) is int and 0<v<=MAX_RECORDS for v in counts.values())
                       and manifest.get('input')==INPUTS[kind]
                       and all(isinstance(manifest.get(k),str) and re.fullmatch('[0-9a-f]{64}',manifest[k]) for k in ('input_sha256','prompt_sha256'))
                       and type(manifest.get('unreviewed_allowed')) is bool
                       and isinstance(manifest.get('sources'),list) and bool(manifest['sources'])
                       and all(isinstance(s,str) and bool(s.strip()) for s in manifest['sources'])
-                      and isinstance(skipped,dict) and all(type(n) is int and n>=0 for n in skipped.values())
-                      and type(dropped) is int and dropped>=0)
+                      and isinstance(skipped,dict) and all(type(n) is int and 0<=n<=MAX_RECORDS for n in skipped.values())
+                      and type(dropped) is int and 0<=dropped<=MAX_RECORDS)
     if not valid_manifest:
         error('invalid_manifest')
     if manifest.get('unreviewed_allowed') is True:

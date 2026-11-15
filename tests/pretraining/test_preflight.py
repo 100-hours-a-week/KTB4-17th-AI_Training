@@ -337,3 +337,19 @@ def test_jsonl_input_bounds_fail_closed(dataset, monkeypatch, bound):
     result = check(dataset)
     assert result['status'] == 'failed'
     assert f'input_{bound}_limit' in codes(result)
+
+
+@pytest.mark.parametrize('field', ['train', 'val', 'skipped', 'dropped_by_max_primary'])
+def test_manifest_counters_above_stream_record_bound_fail_safely(dataset,field):
+    manifest = dataset[5]
+    if field in ('train','val'):
+        manifest['counts'][field] = 10 ** 309
+    elif field == 'skipped':
+        manifest['skipped'] = {'filtered':10 ** 309}
+    else:
+        manifest[field] = 10 ** 309
+    (dataset[1] / 'manifest.json').write_text(json.dumps(manifest))
+    result = check(dataset)
+    assert result['status'] == 'failed'
+    assert 'invalid_manifest' in codes(result)
+    assert 'declared_skipped_rows' not in result['metrics']

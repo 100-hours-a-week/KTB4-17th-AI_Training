@@ -20,7 +20,7 @@ def valid_checks(checks):
     return isinstance(checks, list) and bool(checks) and all(
         isinstance(c, dict) and c.get('status') in ('passed', 'failed')
         and identifier(c.get('name')) and isinstance(c.get('metrics'), dict)
-        and all(identifier(k) and type(v) in (int, float) and math.isfinite(v) and (v >= 0 or k == 'exit_code') for k, v in c['metrics'].items())
+        and all(identifier(k) and type(v) in (int, float) and (type(v) is int or math.isfinite(v)) and (v >= 0 or k == 'exit_code') for k, v in c['metrics'].items())
         and type(c.get('duration_seconds')) in (int, float) and c['duration_seconds'] >= 0
         and all(isinstance(c.get(k, []), list) and all(
             isinstance(e, dict) and identifier(e.get('code'))

@@ -158,3 +158,22 @@ def test_markdown_keeps_both_dataset_rows_before_warning_bullets(complete_eviden
     assert render_evidence(complete_evidence).returncode==0
     markdown=(complete_evidence / 'summary.md').read_text()
     assert markdown.index('| tagging |') < markdown.index('| extraction |') < markdown.index('- tagging:')
+
+
+def test_large_integer_metric_retains_valid_failed_evidence_and_both_reports(complete_evidence):
+    huge_count = 10 ** 309
+    data = json.loads((complete_evidence / 'preflight.json').read_text())
+    data['status'] = 'failed'
+    data['checks'][0]['status'] = 'failed'
+    data['checks'][0]['errors'] = [dict(code='source_count_mismatch', count=1)]
+    data['checks'][0]['metrics']['declared_skipped_rows'] = huge_count
+    (complete_evidence / 'preflight.json').write_text(json.dumps(data))
+    write_junit(complete_evidence / 'preflight-junit.xml',data['checks'])
+    run = render_evidence(complete_evidence,preflight=1)
+    assert run.returncode == 1
+    summary = json.loads((complete_evidence / 'summary.json').read_text())
+    assert summary['checks'][0]['metrics']['declared_skipped_rows'] == huge_count
+    assert summary['checks'][0]['errors'] == [dict(code='source_count_mismatch', count=1)]
+    assert summary['status'] == 'failed'
+    assert (complete_evidence / 'summary.md').exists()
+    assert 'Traceback' not in run.stderr

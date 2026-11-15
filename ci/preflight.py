@@ -2,29 +2,12 @@
 from __future__ import annotations
 
 import argparse
-import datetime as dt
 import json
-import os
-import re
-import subprocess
 import time
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from ci.validators import validate_dataset
-
-
-def identity(root):
-    def safe(value):
-        return value if re.fullmatch(r'[A-Za-z0-9_./:@+-]{1,200}', value) else 'unavailable'
-    try:
-        commit = subprocess.run(['git','-C',str(root),'rev-parse','HEAD'], capture_output=True,text=True,check=True).stdout.strip()
-    except (OSError, subprocess.CalledProcessError):
-        commit = 'unavailable'
-    return dict(repository=safe(os.environ.get('GITHUB_REPOSITORY', '100-hours-a-week/KTB4-17th-AI_Training')),
-                commit=safe(commit), run_id=safe(os.environ.get('GITHUB_RUN_ID','local')),
-                run_attempt=safe(os.environ.get('GITHUB_RUN_ATTEMPT','1')),
-                generated_at=dt.datetime.now(dt.timezone.utc).isoformat())
+from ci.evidence import identity
 
 
 def main(argv=None):
@@ -34,10 +17,19 @@ def main(argv=None):
     args = parser.parse_args(argv)
     args.output_dir.mkdir(parents=True,exist_ok=True)
     checks = []
+    try:
+        from ci.validators import validate_dataset
+    except Exception:
+        validate_dataset = None
     for kind in ('tagging', 'extraction'):
         start = time.perf_counter()
         try:
-            checks.append(validate_dataset(args.root / 'Lena-Training', kind))
+            if validate_dataset is None:
+                checks.append(dict(name=kind,status='failed',duration_seconds=round(time.perf_counter()-start,6),
+                                   errors=[dict(code='validator_unavailable',count=1)],warnings=[],skips=[],metrics={},files=[],
+                                   training_ready=False,readiness_reasons=['validator_unavailable']))
+            else:
+                checks.append(validate_dataset(args.root / 'Lena-Training', kind))
         except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, OverflowError):
             # Preserve evidence for ordinary corrupt-input/path errors; never expose values.
             checks.append(dict(name=kind, status='failed', duration_seconds=round(time.perf_counter()-start, 6),

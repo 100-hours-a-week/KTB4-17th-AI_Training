@@ -51,3 +51,33 @@ def test_real_assert_fits_stops_before_truncation(length,limit,expected_failure)
         with pytest.raises(SystemExit): module.assert_fits(rows,LengthOnlyTokenizer(),max_length=limit)
     else:
         module.assert_fits(rows,LengthOnlyTokenizer(),max_length=limit)
+
+
+@pytest.mark.parametrize('validator_text', ['def broken(', 'raise ImportError("PRIVATE unavailable dependency")'])
+def test_independent_evidence_survives_broken_validator_and_unavailable_pytest(tmp_path, validator_text):
+    import shutil
+    shutil.copytree(REPO / 'ci',tmp_path / 'ci',ignore=shutil.ignore_patterns('__pycache__'))
+    (tmp_path / 'ci/validators.py').write_text(validator_text)
+    trainer = tmp_path / 'Lena-Training/training/tagging/train_lora.py'
+    trainer.parent.mkdir(parents=True)
+    shutil.copyfile(REPO / 'Lena-Training/training/tagging/train_lora.py',trainer)
+    out = tmp_path / 'reports'
+    missing_tools = subprocess.run([sys.executable,'-S','-m','pytest'],cwd=tmp_path,capture_output=True)
+    assert missing_tools.returncode != 0
+    for command in ('ci.contracts','ci.preflight'):
+        result = subprocess.run([sys.executable,'-S','-m',command,'--output-dir',str(out)],cwd=tmp_path,capture_output=True,text=True)
+        expected = 1 if command == 'ci.preflight' or validator_text.startswith('def ') else 0
+        assert result.returncode == expected
+    run = subprocess.run([sys.executable,'-S','-m','ci.report','--output-dir',str(out),'--unit-exit','1','--preflight-exit','1','--contracts-exit','1'],cwd=tmp_path,capture_output=True,text=True)
+    assert run.returncode == 1
+    report = json.loads((out / 'summary.json').read_text())
+    assert report['status']=='failed'
+    assert len(report['checks']) == 2
+    assert len(report['contracts']) == 2
+    assert any(e['code']=='validator_unavailable' for e in report['checks'][0]['errors'])
+    assert report['unit_tests'] == {}
+    assert (out / 'preflight-junit.xml').exists()
+    markdown = (out / 'summary.md').read_text()
+    assert 'unavailable' in markdown
+    assert 'PRIVATE' not in json.dumps(report)+markdown
+    assert 'Traceback' not in run.stderr

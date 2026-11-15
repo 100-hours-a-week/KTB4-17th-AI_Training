@@ -24,7 +24,7 @@ def dataset(tmp_path):
     rows = [dict(id=f'item-{i}', prompt=[dict(role='system', content='system'), dict(role='user', content=f'question {i}')], completion=[dict(role='assistant', content='{"primary":[],"secondary":[],"off_topic":false}')]) for i in range(2)]
     write_jsonl(out / 'train.jsonl', rows[:1])
     write_jsonl(out / 'val.jsonl', rows[1:])
-    write_jsonl(source, [dict(id=r['id']) for r in rows])  # group is optional
+    write_jsonl(source, [dict(id=r['id'], **json.loads(r['completion'][0]['content'])) for r in rows])  # group is optional
     write_jsonl(teacher, [dict(id=r['id'], familyId=f'family-{i}') for i, r in enumerate(rows)])
     manifest = dict(input=str(source.relative_to(base)), input_sha256=hashlib.sha256(source.read_bytes()).hexdigest(), prompt_sha256=hashlib.sha256(b'system').hexdigest(), counts=dict(train=1,val=1), sources=['synthetic'], unreviewed_allowed=False)
     (out / 'manifest.json').write_text(json.dumps(manifest))
@@ -179,6 +179,7 @@ def extraction(dataset):
         row['completion'][0]['content'] = json.dumps(dict(assurances=50,compliance=50,ideal_status=50,ideal_warmth=50,positivity=50,withdrawal=50,narrative=dict(headline='h',body='b',traits=['t']),summaries=[]))
     write_jsonl(out / 'train.jsonl',rows[:1])
     write_jsonl(out / 'val.jsonl',rows[1:])
+    write_jsonl(source, [dict(id=r['id'], familyId=f'family-{i}', output=json.loads(r['completion'][0]['content'])) for i,r in enumerate(rows)])
     manifest = dataset[5]
     manifest['input'] = str(source.relative_to(base))
     manifest['input_sha256'] = hashlib.sha256(source.read_bytes()).hexdigest()
@@ -287,3 +288,52 @@ def test_input_symlink_cycle_still_writes_failed_preflight_evidence(dataset):
     assert result['checks'][0]['status'] == 'failed'
     assert (out / 'preflight-junit.xml').exists()
     assert 'Traceback' not in run.stderr
+
+
+@pytest.mark.parametrize('kind', ['tagging', 'extraction'])
+def test_valid_shaped_label_swap_preserves_ids_but_fails_source_equality(request, kind):
+    from ci.validators import validate_dataset
+    fixture = request.getfixturevalue('dataset' if kind == 'tagging' else 'extraction')
+    if kind == 'tagging':
+        base, out, source, rows = fixture[0] / 'Lena-Training', fixture[1], fixture[2], fixture[4]
+        outputs = [dict(primary=[],secondary=[],off_topic=False),dict(primary=[],secondary=[],off_topic=True)]
+        source_rows = [dict(id=r['id'], **o) for r,o in zip(rows,outputs)]
+    else:
+        base, out, rows = fixture
+        source = base / 'data/teacher/qwen-fp8-sub1000/extraction.jsonl'
+        outputs = [dict(assurances=n,narrative=dict(headline='h',body='b',traits=[]),summaries=[]) for n in (30,70)]
+        source_rows = [dict(id=r['id'],familyId=f'f-{i}',output=o) for i,(r,o) in enumerate(zip(rows,outputs))]
+    write_jsonl(source,source_rows)
+    path = out / 'manifest.json'
+    manifest = json.loads(path.read_text())
+    manifest['input_sha256'] = hashlib.sha256(source.read_bytes()).hexdigest()
+    path.write_text(json.dumps(manifest))
+    for row, output in zip(rows,outputs): row['completion'][0]['content'] = json.dumps(output)
+    for split,row in zip(('train','val'),rows): write_jsonl(out / f'{split}.jsonl',[row])
+    assert validate_dataset(base,kind)['status'] == 'passed'
+    rows[0]['completion'],rows[1]['completion'] = rows[1]['completion'],rows[0]['completion']
+    for split,row in zip(('train','val'),rows): write_jsonl(out / f'{split}.jsonl',[row])
+    result = validate_dataset(base,kind)
+    assert result['status'] == 'failed'
+    assert result['metrics']['source_label_mismatches'] == 2
+    assert [e for e in result['errors'] if e['code']=='source_label_mismatch'] == [dict(code='source_label_mismatch',count=2)]
+
+
+def test_repeated_prompt_hash_defect_is_one_issue_with_true_count(dataset):
+    manifest = dataset[5]
+    manifest['prompt_sha256'] = '0' * 64
+    (dataset[1] / 'manifest.json').write_text(json.dumps(manifest))
+    issues = [e for e in check(dataset)['errors'] if e['code']=='prompt_hash_mismatch']
+    assert issues == [dict(code='prompt_hash_mismatch',count=2)]
+
+
+@pytest.mark.parametrize('bound', ['file', 'line', 'records'])
+def test_jsonl_input_bounds_fail_closed(dataset, monkeypatch, bound):
+    import ci.validators as validators
+    if bound == 'file': monkeypatch.setattr(validators,'MAX_JSONL_BYTES',1)
+    if bound == 'line': monkeypatch.setattr(validators,'MAX_LINE_BYTES',1)
+    if bound == 'records':
+        monkeypatch.setattr(validators,'MAX_RECORDS',1)
+    result = check(dataset)
+    assert result['status'] == 'failed'
+    assert f'input_{bound}_limit' in codes(result)

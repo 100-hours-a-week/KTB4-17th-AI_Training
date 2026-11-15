@@ -1,0 +1,9 @@
+# Local pre-training CI tools and generated evidence.
+/.venv/
+/.venv-ci/
+/.venv-pretraining-ci/
+/reports/
+/.coverage
+/.coverage.*
+/.pytest_cache/
+__pycache__/
